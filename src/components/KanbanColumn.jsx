@@ -6,7 +6,7 @@ function KanbanColumn({children, title, innerRef, ...droppableProps}) {
       ref={innerRef}
       {...droppableProps}
     >
-      <h2 className='text-2xl font-semibold m-4'>{title}</h2>
+      <h2 className='text-2xl font-semibold m-4'>{title.charAt(0).toUpperCase() + title.slice(1)}</h2>
       {children}
     </div>
   )

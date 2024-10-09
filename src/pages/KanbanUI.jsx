@@ -6,15 +6,14 @@ import { useKanbanContext } from '../context/KanbanContext'
 import { v4 as uuidv4 } from 'uuid';
 import {Modal} from '../components'
 
-const initialData = {
-  todo: [],
-  inProgress: [],
-  done: []
-}
 
 
 function KanbanUI() {
-  const [columns, setColumns] = useState(initialData);
+  const [columns, setColumns] = useState({
+    todo: [],
+    inProgress: [],
+    done: []
+  });
   const [loading, setLoading] = useState(false)
   const {projectId} = useParams();
   const {supabase} = useKanbanContext();
@@ -50,7 +49,7 @@ function KanbanUI() {
 
     // console.log('Source', sourceColumn)
     // console.log('dest', destColumn)
-    console.log('moved', movedItem)
+    // console.log('moved', movedItem)
   
     setColumns({
       ...columns, 
@@ -62,34 +61,57 @@ function KanbanUI() {
   }
   const fetchProjectTasks = async () => {
     setLoading(true);
-    setColumns(initialData)
+    // setColumns({
+    //   todo: [], 
+    //   inProgress: [], 
+    //   done: []
+    // })
     // if(columns) {setColumns(initialData)}
     const {data, error} = await supabase.from('project_list').select('id, project_name, project_description, project_task!inner(task_id, task_status, task_desc, task_title)').eq('project_task.project_id', projectId)
-    console.log(data[0])
-    if(!data) return setColumns(initialData)
+    // console.log(data);
+    if(!data){ return setColumns({
+      todo: [], 
+      inProgress: [], 
+      done: []
+    })}
       if(data.length === 0) {
+        const {data, error} = await supabase.from('project_list').select('id, project_name, project_description').eq('id', projectId);
+        setTitle(data[0]['project_name'])
+        
         setLoading(false);
         window.alert('Cannot Find tasks')
       }
-      setTitle(data[0]["project_name"])
-    await data[0]['project_task'].forEach((item) => {
-      // if(item["task_status"] === 'todo') {
-      //   setInitialColumns({...initialColumns, 
-      //     todo: [item]
-      //   })
-      // }
-      // setColumns({...columns, [item["task_status"]]: item})
-      initialData[item["task_status"]].push(item)
+      setTitle(data[0]['project_name'])
+      await data[0]['project_task'].forEach((item) => {
+        
+        // console.log(item);
+        switch(item['task_status']) {
+        case 'todo': 
+        setColumns(prev => ({...prev, todo: [ item, ...prev.todo] }));
+          break;
+        case 'inProgress': 
+        setColumns(prev => ({...prev, inProgress: [ item, ...prev.inProgress] }));
+          // console.log(columns);
+          break;
+        case 'done': 
+        setColumns(prev => ({...prev, done: [ item, ...prev.done] }));
+          // console.log(columns);
+          break;
+        default:
+          console.log('is there an error?', error); }
+      // console.log(initialData);
+      // setColumns({...columns, [item["task_status"]]: [...columns[item["task_status"]], item]})
+      
       // console.log(item["task_status"])
     })
-    console.log(columns)
     setLoading(false);
+    // console.log(columns)
   }
 
   const updateProjectTask = async (moved, id) => {
-    console.log(id);
+    // console.log(id);
     const {data, error} = await supabase.from('project_task').update({'task_status': id}).eq('task_id', moved['task_id']).select();
-    console.log(data);
+    // console.log(data);
 
   }
 
@@ -104,20 +126,21 @@ function KanbanUI() {
   }
 
   const handleDelete = async (id) => {
+    // console.log(id);
     const {data, error} = await supabase.from('project_task').delete().eq('task_id', id["task_id"]);
     // console.log(data);
     switch(id["task_status"]) {
       case 'todo': 
         setColumns({...columns, todo: columns.todo.filter(item => item["task_id"] != id["task_id"]) });
-        console.log(columns);
+        // console.log(columns);
         break;
       case 'inProgress': 
         setColumns({...columns, inProgress: columns.inProgress.filter(item => item["task_id"] != id["task_id"]) });
-        console.log(columns);
+        // console.log(columns);
         break;
       case 'done': 
         setColumns({...columns, done: columns.done.filter(item => item["task_id"] != id["task_id"]) });
-        console.log(columns);
+        // console.log(columns);
         break;
       default: 
         console.log('is there an id?', id);
@@ -127,7 +150,7 @@ function KanbanUI() {
     fetchProjectTasks();
     
     // console.log(initialColumns)
-  }, [columns, projectId])
+  }, [ projectId])
 
   if(loading) return (<>Loading...</>)
 

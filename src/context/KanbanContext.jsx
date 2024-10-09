@@ -18,6 +18,7 @@ export function KanbanContextProvider({children}) {
 
 
     const fetchProjectDetails = async () => {
+        setProjects()
         const {data, error} = await supabase.from('project_list').select('id, project_name, project_description')
         // 'id, project_name, project_description, time_created, project_task(task_id, project_id, task_status, task_desc, task_title)'
         if(error) {console.log(error)}

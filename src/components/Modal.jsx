@@ -11,7 +11,7 @@ function Modal(props) {
 
         {/* Button triggering modal */}
         <button onClick={props.toggleModal} className=' px-4 py-2 rounded'>
-            <CiSquarePlus className='w-[3rem] h-[3rem] hover:bg-slate-500' />
+            <CiSquarePlus className='w-[2rem] h-[2rem] hover:bg-slate-500' />
         </button>
         
 

@@ -15,6 +15,7 @@ function App() {
   const {projects, supabase, setProjects} = useKanbanContext();
 
 
+
   return (
     <>
       <Navbar />
