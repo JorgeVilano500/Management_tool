@@ -15,11 +15,16 @@ const supabase = createClient(supabaseURL, supabaseAP);
 export function KanbanContextProvider({children}) {
     const [projects, setProjects] = useState();
 
+    const priorities = {
+        'low': '#4945FF',
+        'medium': '#FFDD3D',
+        'high': '#FF493D'
+    }
 
 
     const fetchProjectDetails = async () => {
         setProjects()
-        const {data, error} = await supabase.from('project_list').select('id, project_name, project_description')
+        const {data, error} = await supabase.from('project_list').select('id, project_name, project_description, priority, project_task(task_id, task_status)')
         // 'id, project_name, project_description, time_created, project_task(task_id, project_id, task_status, task_desc, task_title)'
         if(error) {console.log(error)}
         // console.log(data)
@@ -33,7 +38,7 @@ export function KanbanContextProvider({children}) {
     
 
     return (
-        <KanbanContext.Provider value={{projects, supabase, setProjects}}>
+        <KanbanContext.Provider value={{projects, supabase, setProjects, priorities}}>
             {children}
             
         </KanbanContext.Provider>

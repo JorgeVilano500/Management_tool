@@ -1,10 +1,10 @@
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { ProjectCard } from '../components'
 import {Modal} from '../components';
 
 
 
-function LandingPage({projectList, supabase, setProjects}) {
+function LandingPage({projectList, supabase, setProjects, priorities}) {
    
 
     const [newProject, setNewProject] = useState({
@@ -29,6 +29,19 @@ function LandingPage({projectList, supabase, setProjects}) {
             day = '0' + day;
         const newDate =  [year, month, day].join('-');
         return newDate;
+    }
+    const handleTaskProgess = async (list) => {
+        let completedPercent;
+        let totalListVal = list.length; 
+        let completedListVal = 0;
+         await list.forEach(item => {
+            if(item["task_status"] === 'done') {
+                completedListVal++;
+            }
+            // console.log(completedPercent)
+        })
+        completedPercent = (completedListVal / totalListVal) * 100
+        return   completedPercent;
     }
 
     const AddProjectSupabase = async () => {
@@ -80,11 +93,13 @@ function LandingPage({projectList, supabase, setProjects}) {
               (
                 <>
               <h2 className='text-center'>Select a Project</h2>
-              <div className='grid grid-cols-4 w-[100%] grid-rows-2 h-[auto] p-5 justify-items-center '>
+              <div className='grid grid-cols-3 w-[100%] grid-rows-2 h-[auto] p-5 justify-items-center '>
               
-              {projectList.map((item, index) => (
-                  <ProjectCard handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} description={item["project_description"]} />
-                ))}
+              {projectList.map((item, index) => {
+                const projectPercent = handleTaskProgess(item["project_task"]).then(response => {console.log(response); return response});
+                return (
+                  <ProjectCard priorities={priorities} itemTasks={projectPercent} handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} priority={item["priority"]} description={item["project_description"]} />
+                )})}
             </div>
                 </>    
         )
