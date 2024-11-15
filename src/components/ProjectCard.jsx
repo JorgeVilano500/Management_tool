@@ -4,7 +4,7 @@ import { GoProjectSymlink } from "react-icons/go";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import ProgressBar from './ProgressBar';
 
-function ProjectCard({title, description, id, priorities,priority,  handleDelete, itemTasks}) {
+function ProjectCard({userInfo, title, description, id, priorities,priority,  handleDelete, itemTasks}) {
   const [completedPerc, setCompletedPerc] = useState(0)
   useEffect(() => {
     itemTasks.then(response => {
@@ -13,11 +13,11 @@ function ProjectCard({title, description, id, priorities,priority,  handleDelete
       return response});
   }, []) 
   return (
-    <div className=' flex flex-col rounded border-[1px] mx-4 my-2 w-[80%] border-slate-600 justify-between'>
+    <div className=' flex lg:flex-col rounded border-[1px] mx-4 my-2 lg:w-[80%] border-slate-600 justify-between'>
       <section className='flex flex-col '>
         <div style={{backgroundColor: priorities[priority]}} className={`rounded-t text-slate-100 flex flex-row border-slate-600  border-[1px] w-[100%] justify-between  p-8`}>
-          <h2 className=''>{title}</h2>
-          <p className='py-1 px-2 rounded opacity-50 brightness-200 bg-slate-800 border border-black'>{priority}</p>
+          <h2 className='xs:text-xs font-semibold xs:w-[100%]'>{title}</h2>
+          <p className='lg:py-1 lg:px-2 xs:py-0 rounded opacity-50 brightness-200 bg-slate-800 border border-black'>{priority}</p>
 
         </div>
         <p className='m-2'>{itemTasks && <ProgressBar percent={`${Math.floor(completedPerc)}%`} />}</p>
@@ -27,11 +27,13 @@ function ProjectCard({title, description, id, priorities,priority,  handleDelete
       </section>
 
     <section className='flex flex-row p-4 justify-center'>
-
-      <button onClick={() => handleDelete(id)} className='m-auto'>
+      {
+        userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(id)} className='m-auto p-2 transition ease-in hover:text-slate-500 hover:bg-slate-200  rounded-lg'>
         <RiDeleteBin6Fill />
-      </button>
-      <Link to={`/${id}`} className='m-auto'>
+      </button> :  <></>
+      }
+     
+      <Link to={`/${id}`} className='m-auto p-2 transition ease-in hover:text-slate-500 hover:bg-slate-200  rounded-lg'>
         <GoProjectSymlink />
       </Link>
     </section>

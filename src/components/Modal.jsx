@@ -7,19 +7,20 @@ function Modal(props) {
 
 
   return (
-    <div>
+    <div className='flex'>
 
         {/* Button triggering modal */}
-        <button onClick={props.toggleModal} className=' px-4 py-2 rounded'>
-            <CiSquarePlus className='w-[2rem] h-[2rem] hover:bg-slate-500' />
+        <button onClick={props.toggleModal} className='text-slate-200 self-center bg-slate-800 px-2 py-1 transition ease-in hover:text-slate-500 hover:bg-slate-200  rounded-[1rem]'>
+            {/* <CiSquarePlus className='w-[2rem] h-[2rem] ' /> */}
+            Create New {props.task}
         </button>
         
 
         {/* modal backdrop */}
         {props.isOpen && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex lg:flex-col items-center justify-center z-50">
                 {/* modal content */}
-                <div className='bg-white rounded-lg relative shadow-lg w-1/3 p-6'>
+                <div className='bg-white rounded-lg relative shadow-lg xs:w-[auto] lg:w-1/3   p-6'>
                     <button className='bg-red-500 absolute right-0 top-0  text-white px-3 py-1 rounded' onClick={props.toggleModal}><BiExit /></button>
                     {props.children}
 

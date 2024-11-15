@@ -5,6 +5,8 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { useKanbanContext } from '../context/KanbanContext'
 import { v4 as uuidv4 } from 'uuid';
 import {Modal} from '../components'
+import { TfiSearch } from "react-icons/tfi";
+import { FaPlus } from "react-icons/fa6";
 
 
 
@@ -14,13 +16,26 @@ function KanbanUI() {
     inProgress: [],
     done: []
   });
+  const colorTaskWheel = {
+    todo: '#16D921',
+    inProgress: '#E08A48',
+    done: '#8841FA'
+  }
+  const kanbanColorWheel = {
+    todo: '#DB3232',
+    inProgress: '#FC8F42',
+    done: '#4AA2D9'
+  }
   const [loading, setLoading] = useState(false)
   const {projectId} = useParams();
-  const {supabase} = useKanbanContext();
+  const {supabase, userInfo} = useKanbanContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleModal = () => {
+  const toggleModal = (taskStatus) => {
+    //opens up modal
       setIsOpen(!isOpen)
+    // and then set the task status automatically in the background
+      setTaskForm(prev => ({...prev, taskStatus: taskStatus}))
   }
 
   // const [initialColumns, setInitialColumns] = useState({
@@ -32,7 +47,8 @@ function KanbanUI() {
 
   const [taskForm, setTaskForm] = useState({
     taskName: '', 
-    taskDesc: ''
+    taskDesc: '',
+    taskStatus: ''
   })
 
 
@@ -116,13 +132,13 @@ function KanbanUI() {
   }
 
   const insertNewTask = async () => {
-    const {data, error} = await supabase.from('project_task').insert({'task_id': uuidv4(), 'project_id': projectId, 'task_status': 'todo', 'task_desc': taskForm.taskDesc, 'task_title': taskForm.taskName }).select();
+    const {data, error} = await supabase.from('project_task').insert({'task_id': uuidv4(), 'project_id': projectId, 'task_status': taskForm.taskStatus, 'task_desc': taskForm.taskDesc, 'task_title': taskForm.taskName }).select();
     if(error) window.alert(error);
     let newObj = {
 
     }
-    setColumns({...columns, todo: [...columns.todo, data[0]]})
-    if(data) toggleModal();
+    setColumns({...columns, [taskForm.taskStatus]: [...columns[taskForm.taskStatus], data[0]]})
+    if(data) toggleModal('');
   }
 
   const handleDelete = async (id) => {
@@ -153,27 +169,33 @@ function KanbanUI() {
   }, [ projectId])
 
   if(loading) return (<>Loading...</>)
+    // {title ? title : <></>}
 
   return (
-    <div>
-      <section className='flex flex-row justify-center'>
+    <div className='lg:h-[auto] xs:w-[100%]'>
+      <section className='flex flex-row justify-between w-[80%] m-auto mt-4 bg-slate-200 p-3 rounded'>
 
-    <h1 className='text-3xl self-center'>{title ? title : <></>}</h1>
-    <Modal  isOpen={isOpen} toggleModal={toggleModal}>
+        <h1 className='xs:text-xl font-semibold md:text-2xl lg:text-3xl self-center'>{title ? title : <>Tasks</>}</h1>
+        <div className='flex flex-row'>
+          <TfiSearch className='w-[2rem] h-[2rem] self-center mx-3 bg-slate-400 p-2 rounded ' />
+          <Modal task={'Task'}  isOpen={isOpen} toggleModal={() => toggleModal('todo')}>
 
-      <section>
-        <h2>Add A Task</h2>
-        <input onChange={(e) => setTaskForm({...taskForm, taskName: e.target.value})}  placeholder='task title' />
-        <input onChange={(e) => setTaskForm({...taskForm, taskDesc: e.target.value})} placeholder='task description' />
-        <button onClick={insertNewTask}>Submit</button>
+      <section className='text-center flex flex-col'>
+        <h2 className='text-semibold'>Add A Task</h2>
+        <section>
+          <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskName: e.target.value})}  placeholder='Title' />
+          <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskDesc: e.target.value})} placeholder='Description' />
+        </section>
+        <button className='bg-slate-500 p-1 rounded w-[25%] m-auto text-slate-50 mt-2' onClick={insertNewTask}>Submit</button>
       </section>
     </Modal>
+    </div>
       </section>
       <DragDropContext
         enableStrictMode
         onDragEnd={onDragEnd}
       >
-        <div className='flex justify-evenly items-stretch p-4  '> 
+        <div className='flex xs:flex-col lg:flex-row justify-evenly items-stretch p-4    '> 
           {columns ? Object.entries(columns).map(([columnId, tasks], index) => (
             <Droppable 
 
@@ -184,31 +206,34 @@ function KanbanUI() {
                <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className='w-[100%] p-2 flex items-stretch'
+                className='lg:w-[100%] p-2 flex items-stretch'
                >
 
                   <KanbanColumn
                     // innerRef={provided.innerRef}
                     // {...provided.droppableProps}
                     title={columnId}
+                    colorTaskWheel={colorTaskWheel}
+                    kanbanColorWheel={kanbanColorWheel}
                   >
                     {
                       tasks.map((task, taskIndex) => (
                         <Draggable   key={task["task_id"]} draggableId={`${task["task_id"]}-${taskIndex}`} index={taskIndex} >
                           {(provided) => (
                             <div
-                            className='w-[100%]'
+                            className='w-[90%] m-auto'
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <KanbanCard handleDelete={handleDelete} text={task} />
+                              <KanbanCard userInfo={userInfo} handleDelete={handleDelete} text={task} />
 
                             </div>
                           )}
                         </Draggable>
                       ))
                     }
+                    <button onClick={() => toggleModal(columnId)} className='w-[90%] shadow-sm shadow-slate-800 text-slate-200 m-auto mb-3 rounded-xl p-2 flex flex-row justify-center gap-2  border-dashed border-[1px] transition ease-in hover:bg-slate-200 hover:border-black hover:border-solid hover:text-slate-800'><FaPlus className='self-center' /> Add new task</button>
                   </KanbanColumn>
                             {/* The placeholder should be included here, within the Droppable */}
                 {provided.placeholder}

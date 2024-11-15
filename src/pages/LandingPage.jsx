@@ -1,22 +1,16 @@
 import React, {  useEffect, useState } from 'react'
 import { ProjectCard } from '../components'
 import {Modal} from '../components';
+import { ImSpinner9 } from "react-icons/im";
+ import { useKanbanContext } from '../context/KanbanContext';
 
 
 
-function LandingPage({projectList, supabase, setProjects, priorities}) {
+function LandingPage({projectList, supabase, setProjects, priorities, addProjectSupabase}) {
+    
+    const { userInfo} = useKanbanContext();
+  
    
-
-    const [newProject, setNewProject] = useState({
-        projectName: '', 
-        projectDescription: '', 
-    })
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleModal = () => {
-        setIsOpen(!isOpen)
-    }
-
     function formatDate() {
         var d = new Date(),
             month = '' + (d.getMonth() + 1),
@@ -44,12 +38,7 @@ function LandingPage({projectList, supabase, setProjects, priorities}) {
         return   completedPercent;
     }
 
-    const AddProjectSupabase = async () => {
-        const {data, error} = await supabase.from('project_list').insert({id: projectList.length + 1 ,'project_name': newProject.projectName, 'project_description': newProject.projectDescription, 'time_created': formatDate()}).select();
 
-        if(data) toggleModal();
-        return setProjects([...projectList, data[0]]);
-    }
 
     const handleDelete = async (id) => {
         const {data, error} = await supabase.from('project_list').delete().eq('id', id);
@@ -63,50 +52,27 @@ function LandingPage({projectList, supabase, setProjects, priorities}) {
         {/* <AddToProjects /> */}
         
         <div className=' flex flex-row justify-center content-center'>
-            <h1 className='text-5xl text-center my-4'>Product Management Status Tool</h1>
-            <Modal toggleModal={toggleModal} isOpen={isOpen}  >
-                <div className='flex flex-col h-[10rem] m-auto'>
-                            <input
-                            type="hidden"
-                            name="addToProjects"
-                            value="projectForm"
-                            />
-                        <div className='flex flex-row h-[90%]'>
-
-                            <input className='h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Title' value={newProject.projectName} 
-                            onChange={(e) => {return setNewProject({
-                                // ...newProject,
-                                projectName: e.target.value
-                            })} } 
-                            />
-                         <input className='h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Description' value={newProject.projectDescription} onChange={(e) => {return setNewProject({
-                             ...newProject,
-                             projectDescription: e.target.value
-                            }) }} />
-                            </div>
-                        <input className='bg-red-500 border border-transparent w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  ' onClick={AddProjectSupabase} type='submit' placeholder='Submit' />
-                    </div> 
-                    </Modal> 
+            <h1 className='xs:text-2xl font-semibold m-auto md:text-3xl lg:text-5xl text-center lg:my-4 '>Product Management Status Tool</h1>
+            
         </div>
           {
               projectList ? 
               (
                 <>
               <h2 className='text-center'>Select a Project</h2>
-              <div className='grid grid-cols-3 w-[100%] grid-rows-2 h-[auto] p-5 justify-items-center '>
+              <div className='grid xs:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xs:w-[100%] lg:w-[100%] grid-rows-2 h-[auto] p-5 justify-items-center '>
               
               {projectList.map((item, index) => {
                 const projectPercent = handleTaskProgess(item["project_task"]).then(response => {console.log(response); return response});
                 return (
-                  <ProjectCard priorities={priorities} itemTasks={projectPercent} handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} priority={item["priority"]} description={item["project_description"]} />
+                  <ProjectCard userInfo={userInfo} priorities={priorities} itemTasks={projectPercent} handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} priority={item["priority"]} description={item["project_description"]} />
                 )})}
             </div>
                 </>    
         )
                  : (
-                    <div className='text-center 
-                    /'>
-                        <h1>List Unavailable at the moment</h1>
+                    <div className='text-center w-[10%] m-auto'>
+                       <ImSpinner9 className=' animate-spin' style={{width: '3rem', height: '5rem'}} />
 
                     </div>
                 )
