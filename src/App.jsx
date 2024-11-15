@@ -12,7 +12,7 @@ import { Navbar, Footer } from './components';
 function App() {
   const [count, setCount] = useState(0)
 
-  const {projects, supabase, setProjects, priorities, displayName, addProjectSupabase, userInfo} = useKanbanContext();
+  const {projects, supabase, setProjects, priorities, displayName, addProjectSupabase, userInfo, signOut} = useKanbanContext();
   
 
 
@@ -23,12 +23,13 @@ function App() {
         userInfo={userInfo}
         displayName={displayName}
         addProjectSupabase={addProjectSupabase}
+        signOut={signOut}
         />
     
       <Routes>
         <Route path='/' element={<LandingPage userInfo={userInfo} projectList={projects} supabase={supabase} setProjects={setProjects} priorities={priorities} />} />
         <Route path='/:projectId' element={<KanbanUI />} />
-        <Route path='/login' element={<LoginPage supabase={supabase} />} />
+        <Route path='/login' element={<LoginPage  />} />
 
       </Routes>
       <Footer />

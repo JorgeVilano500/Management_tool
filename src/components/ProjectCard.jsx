@@ -9,16 +9,14 @@ function ProjectCard({userInfo, title, description, id, priorities,priority,  ha
   useEffect(() => {
     itemTasks.then(response => {
       setCompletedPerc(response);
-      console.log(response); 
       return response});
   }, []) 
   return (
-    <div className=' flex lg:flex-col rounded border-[1px] mx-4 my-2 lg:w-[80%] border-slate-600 justify-between'>
+    <div className='shadow-lg shadow-slate-200 flex lg:flex-col rounded border-[1px] mx-4 my-2 lg:w-[80%] border-slate-600 justify-between'>
       <section className='flex flex-col '>
         <div style={{backgroundColor: priorities[priority]}} className={`rounded-t text-slate-100 flex flex-row border-slate-600  border-[1px] w-[100%] justify-between  p-8`}>
           <h2 className='xs:text-xs font-semibold xs:w-[100%]'>{title}</h2>
-          <p className='lg:py-1 lg:px-2 xs:py-0 rounded opacity-50 brightness-200 bg-slate-800 border border-black'>{priority}</p>
-
+          <p className='lg:py-1 lg:px-2 lg:self-center xs:self-center rounded opacity-50 brightness-200 z-[1] bg-slate-800 border border-black'>{priority}</p>
         </div>
         <p className='m-2'>{itemTasks && <ProgressBar percent={`${Math.floor(completedPerc)}%`} />}</p>
 

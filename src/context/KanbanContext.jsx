@@ -50,7 +50,6 @@ export function KanbanContextProvider({children}) {
     const fetchUserDetails = async () => {
         const {data: {user}} = await supabase.auth.getUser();
 
-        console.log(user)
         if(user) {
             setLoggedIn(true)
             setUserInfo(user);
@@ -116,7 +115,7 @@ export function KanbanContextProvider({children}) {
         })
         if(error) return console.log(error.message)
        
-
+        
     }
 
 

@@ -7,9 +7,9 @@ import { useKanbanContext } from '../context/KanbanContext';
 
 
 
-function LoginPage({supabase}) {
-    const [registered, setRegistered] = useState(false);
-    const {signOut, loggedIn, loginInfo, handleLoginChange, handleLoginFetch, createUserFetch} = useKanbanContext();
+function LoginPage() {
+    const [registered, setRegistered] = useState(true);
+    const {signOut, loggedIn,  handleLoginChange, handleLoginFetch, createUserFetch} = useKanbanContext();
 
     const handleRegisterChange = () => {
         setRegistered(!registered);
@@ -18,13 +18,13 @@ function LoginPage({supabase}) {
   return (<>
     {loggedIn ?
         // log out button 
-    <section className='w-[35%] text-center mx-auto my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
+    <section className='lg:w-[35%] xs:w-[100%]  text-center lg:mx-auto lg:my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
         <h3>Thank you for taking the time of checking out this website! <br /> Please come again!</h3>
         <button className='bg-slate-500 w-[25%] mx-auto py-1 px-2 rounded  shadow-slate-400 shadow-lg transition ease-in hover:bg-slate-300 hover:text-slate-500' onClick={(e) => signOut(e)} >Log Out</button>
     </section> :
         // log in form 
     registered ?
-    <div  className='w-[35%] text-center  mx-auto my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
+    <div  className='lg:w-[35%] xs:w-[90%] xs:h-[100%] xs:mx-auto xs:px-2 text-center  lg:mx-auto lg:my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
 
         <form onSubmit={(e) => handleLoginFetch(e)} className='flex flex-col gap-3 '>
         <MdOutlineQuiz className='mx-auto h-[5rem] w-[5rem]' />
@@ -32,17 +32,17 @@ function LoginPage({supabase}) {
             <h3 className='text-2xl font-semibold'>Welcome Back!</h3>
             <p className='text-slate-500 text-sm'>Login to your account</p>
         </section>
-        <section className='flex flex-row bg-slate-50 w-[50%] mx-auto p-1 '>
+        <section className='flex flex-row bg-slate-50 xs:w-[80%] lg:w-[50%] mx-auto p-1 '>
             <MdEmail className='self-center mx-1' />
             <input name='email' id='email' onChange={(e) => {handleLoginChange(e)}} className='bg-slate-50 hover:border-none focus:border-none outline-none active:border-none  ' placeholder='Email'  />
         </section>
         
-        <section className='flex flex-row bg-slate-50 w-[50%] mx-auto p-1 '>
+        <section className='flex flex-row bg-slate-50 xs:w-[80%] lg:w-[50%] mx-auto p-1 '>
             <RiLockPasswordFill className='self-center mx-1' />
             <input name='passowrd' id='password' onChange={(e) => {handleLoginChange(e)}} className='bg-slate-50 hover:border-none focus:border-none outline-none active:border-none  ' placeholder='Password'  />
         </section>
 
-        <section className='flex flex-row justify-around w-[55%] mx-auto'>
+        <section className='flex flex-row justify-around lg:w-[55%] xs:w-[100%] mx-auto'>
             <div className='flex flex-row'>
                 <input className='mx-1 self-center ' name='rememberUser' type='checkbox' />
                 <label className='self-center' for='rememberUser'>Remember me?</label>
@@ -67,7 +67,7 @@ function LoginPage({supabase}) {
     </div>
         : 
         // logout form
-        <div  className='w-[35%] text-center  mx-auto my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
+        <div  className='lg:w-[35%] xs:w-[90%] xs:h-[100%] xs:mx-auto xs:px-2 text-center  lg:mx-auto lg:my-6 flex flex-col bg-slate-300 h-[25rem] justify-center gap-4'>
 
         <form onSubmit={(e) => createUserFetch(e)} className='flex flex-col gap-3'>
         <MdOutlineQuiz className='mx-auto h-[5rem] w-[5rem]' />
@@ -75,17 +75,17 @@ function LoginPage({supabase}) {
             <h3 className='text-2xl font-semibold'>Welcome Back!</h3>
             <p className='text-slate-500 text-sm'>Register your account</p>
         </section>
-        <section className='flex flex-row bg-slate-50 w-[50%] mx-auto p-1 '>
+        <section className='flex flex-row bg-slate-50 xs:w-[80%] lg:w-[50%] mx-auto p-1 '>
             <MdEmail className='self-center mx-1' />
             <input name='email' id='email' onChange={(e) => {handleLoginChange(e)}} className='bg-slate-50 hover:border-none focus:border-none outline-none active:border-none  ' placeholder='Email'  />
         </section>
         
-        <section className='flex flex-row bg-slate-50 w-[50%] mx-auto p-1 '>
+        <section className='flex flex-row bg-slate-50 xs:w-[80%] lg:w-[50%] mx-auto p-1 '>
             <RiLockPasswordFill className='self-center mx-1' />
             <input name='passowrd' id='password' onChange={(e) => {handleLoginChange(e)}} className='bg-slate-50 hover:border-none focus:border-none outline-none active:border-none  ' placeholder='Password'  />
         </section>
 
-        <section className='flex flex-row justify-around w-[55%] mx-auto'>
+        <section className='flex flex-row justify-around lg:w-[55%] xs:w-[100%] mx-auto'>
             <div className='flex flex-row'>
                 <input className='mx-1 self-center ' name='rememberUser' type='checkbox' />
                 <label className='self-center' for='rememberUser'>Remember me?</label>

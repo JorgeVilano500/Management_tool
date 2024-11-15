@@ -178,17 +178,22 @@ function KanbanUI() {
         <h1 className='xs:text-xl font-semibold md:text-2xl lg:text-3xl self-center'>{title ? title : <>Tasks</>}</h1>
         <div className='flex flex-row'>
           <TfiSearch className='w-[2rem] h-[2rem] self-center mx-3 bg-slate-400 p-2 rounded ' />
-          <Modal task={'Task'}  isOpen={isOpen} toggleModal={() => toggleModal('todo')}>
+          {userInfo ? 
+            <Modal task={'Task'}  isOpen={isOpen} toggleModal={() => toggleModal('todo')}>
+               <section className='text-center flex flex-col'>
+                <h2 className='text-semibold'>Add A Task</h2>
+                <section>
+                  <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskName: e.target.value})}  placeholder='Title' />
+                  <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskDesc: e.target.value})} placeholder='Description' />
+                </section>
+                <button className='bg-slate-500 p-1 rounded w-[25%] m-auto text-slate-50 mt-2' onClick={insertNewTask}>Submit</button>
+              </section>
+            </Modal>
+          :  
+            <></>
+        }
 
-      <section className='text-center flex flex-col'>
-        <h2 className='text-semibold'>Add A Task</h2>
-        <section>
-          <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskName: e.target.value})}  placeholder='Title' />
-          <input className='bg-slate-300 w-[25%] m-4 text-center focus:bg-slate-500 text-slate-50 rounded' onChange={(e) => setTaskForm({...taskForm, taskDesc: e.target.value})} placeholder='Description' />
-        </section>
-        <button className='bg-slate-500 p-1 rounded w-[25%] m-auto text-slate-50 mt-2' onClick={insertNewTask}>Submit</button>
-      </section>
-    </Modal>
+     
     </div>
       </section>
       <DragDropContext
@@ -233,7 +238,12 @@ function KanbanUI() {
                         </Draggable>
                       ))
                     }
-                    <button onClick={() => toggleModal(columnId)} className='w-[90%] shadow-sm shadow-slate-800 text-slate-200 m-auto mb-3 rounded-xl p-2 flex flex-row justify-center gap-2  border-dashed border-[1px] transition ease-in hover:bg-slate-200 hover:border-black hover:border-solid hover:text-slate-800'><FaPlus className='self-center' /> Add new task</button>
+                    {userInfo ? 
+
+                      <button onClick={() => toggleModal(columnId)} className='w-[90%] shadow-sm shadow-slate-800 text-slate-200 m-auto mb-3 rounded-xl p-2 flex flex-row justify-center gap-2  border-dashed border-[1px] transition ease-in hover:bg-slate-200 hover:border-black hover:border-solid hover:text-slate-800'><FaPlus className='self-center' /> Add new task</button>
+                    :
+                    <></>  
+                  }
                   </KanbanColumn>
                             {/* The placeholder should be included here, within the Droppable */}
                 {provided.placeholder}

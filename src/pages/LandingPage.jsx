@@ -63,7 +63,7 @@ function LandingPage({projectList, supabase, setProjects, priorities, addProject
               <div className='grid xs:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xs:w-[100%] lg:w-[100%] grid-rows-2 h-[auto] p-5 justify-items-center '>
               
               {projectList.map((item, index) => {
-                const projectPercent = handleTaskProgess(item["project_task"]).then(response => {console.log(response); return response});
+                const projectPercent = handleTaskProgess(item["project_task"]).then(response => { return response});
                 return (
                   <ProjectCard userInfo={userInfo} priorities={priorities} itemTasks={projectPercent} handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} priority={item["priority"]} description={item["project_description"]} />
                 )})}
