@@ -48,7 +48,7 @@ function LandingPage({projectList, supabase, setProjects, priorities, addProject
     
 
   return (
-    <div className='w-[100%]'>
+    <div className='md:w-[100%]'>
         {/* <AddToProjects /> */}
         
         <div className=' flex flex-row justify-center content-center'>

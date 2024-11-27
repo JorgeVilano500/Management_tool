@@ -7,7 +7,7 @@ import { GoSidebarCollapse } from "react-icons/go";
 import {Modal} from './index';
 
 function Navbar({userInfo, addProjectSupabase, signOut}) {
-  const [isSideOpen, setIsSideOpen] = useState(true);
+  const [isSideOpen, setIsSideOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newProject, setNewProject] = useState({
     projectName: '', 
