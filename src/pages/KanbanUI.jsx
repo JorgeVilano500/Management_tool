@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {KanbanCard, KanbanColumn} from '../components/index'
+import {KanbanCard, KanbanColumn, SafariLoader} from '../components/index'
 import { useParams } from 'react-router'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { useKanbanContext } from '../context/KanbanContext'
@@ -83,7 +83,7 @@ function KanbanUI() {
     //   done: []
     // })
     // if(columns) {setColumns(initialData)}
-    const {data, error} = await supabase.from('project_list').select('id, project_name, project_description, project_task!inner(task_id, task_status, task_desc, task_title)').eq('project_task.project_id', projectId)
+    const {data, error} = await supabase.from('project_list').select('id, project_name, project_description,  project_task!inner(task_id, task_status, task_desc, task_title)').eq('project_task.project_id', projectId)
     // console.log(data);
     if(!data){ return setColumns({
       todo: [], 
@@ -91,7 +91,7 @@ function KanbanUI() {
       done: []
     })}
       if(data.length === 0) {
-        const {data, error} = await supabase.from('project_list').select('id, project_name, project_description').eq('id', projectId);
+        const {data, error} = await supabase.from('project_list').select('id, project_name, project_description, ').eq('id', projectId);
         setTitle(data[0]['project_name'])
         
         setLoading(false);
@@ -168,7 +168,7 @@ function KanbanUI() {
     // console.log(initialColumns)
   }, [ projectId])
 
-  if(loading) return (<>Loading...</>)
+  if(loading) return (<SafariLoader />)
     // {title ? title : <></>}
 
   return (

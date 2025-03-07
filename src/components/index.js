@@ -5,3 +5,6 @@ export {default as Navbar} from './Navbar';
 export {default as Modal} from './Modal';
 export {default as ProgressBar} from './ProgressBar';
 export {default as Footer} from './Footer'
+export {default as TaskModal} from './TaskModal';
+export {default as ModalContentCard} from './ModalContentCard'
+export {default as SafariLoader} from './SafariLoader'

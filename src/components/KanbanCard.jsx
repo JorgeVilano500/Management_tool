@@ -1,15 +1,58 @@
-import React from 'react'
+import React, { useRef, useState} from 'react'
 import { CiCircleRemove } from "react-icons/ci";
+import {TaskModal, ModalContentCard} from './index'
+
+// function KanbanCard({userInfo, text, handleDelete}) {
+//   return (
+//     <section className='shadow-sm shadow-slate-600 rounded-lg group relative'>
+//     <div className='flex  flex-row justify-between p-4 mb-4 bg-white rounded-lg shadow-md w-[100%]'>
+//       <p className='hidden absolute group-hover:block w-[90%] h-[100%] inset-x-0 top-0 text-center bg-slate-400'>{text["task_desc"]}</p>
+//       <h3>{text["task_title"]}</h3>
+//       {userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(text)} ><CiCircleRemove /></button> : <></>}
+//     </div>
+//     </section>
+//   )
+// }
 
 function KanbanCard({userInfo, text, handleDelete}) {
+  const ref = useRef()
+
+  const [modal, setModal] = useState(false);
+
+  
+
+
   return (
-    <section className='shadow-sm shadow-slate-600 rounded-lg group relative'>
-    <div className='flex  flex-row justify-between p-4 mb-4 bg-white rounded-lg shadow-md w-[100%]'>
-      <p className='hidden absolute group-hover:block w-[90%] h-[100%] inset-x-0 top-0 text-center bg-slate-400'>{text["task_desc"]}</p>
-      <h3>{text["task_title"]}</h3>
-      {userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(text)} ><CiCircleRemove /></button> : <></>}
+    // <!-- From Uiverse.io by anniekoop --> 
+    <div className="card !my-4 ">
+      <div className="container">
+        <div className="left">
+          <div className="status-ind"></div>
+        </div>
+        <div className="right">
+          <div className="text-wrap">
+            <p className="text-content">
+              {/* <a className="text-link" href="#">Jane Doe</a> invited you to edit the
+              <a className="text-link" href="#">Web Design</a> file. */}
+              {text["task_title"]}
+            </p>
+            {/* <p className="time">{text["time_created"]}</p> */}
+          </div>
+          <div className="button-wrap">
+            <button onClick={() => setModal(true)} className="primary-cta">View file</button>
+            {/* <button className="secondary-cta">Mark as read</button> */}
+            {userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(text)} ><CiCircleRemove className='text-blue-500 transition ease-in-out hover:text-gray-200' /></button> : <></>}
+              <TaskModal closeModal={() => setModal(false)} openModal={modal}>
+                <ModalContentCard text={text["task_desc"]} />
+              </TaskModal>
+
+          </div>
+        </div>
+      </div>
+      
     </div>
-    </section>
+    
+   
   )
 }
 
