@@ -1,5 +1,5 @@
 import React, {  useEffect, useState } from 'react'
-import { ProjectCard } from '../components'
+import { ProjectCard, SafariLoader } from '../components'
 import {Modal} from '../components';
 import { ImSpinner9 } from "react-icons/im";
  import { useKanbanContext } from '../context/KanbanContext';
@@ -72,7 +72,8 @@ function LandingPage({projectList, supabase, setProjects, priorities, addProject
         )
                  : (
                     <div className='text-center w-[10%] m-auto'>
-                       <ImSpinner9 className=' animate-spin' style={{width: '3rem', height: '5rem'}} />
+                       {/* <ImSpinner9 className=' animate-spin' style={{width: '3rem', height: '5rem'}} /> */}
+                       <SafariLoader />
 
                     </div>
                 )
