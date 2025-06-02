@@ -68,7 +68,7 @@ function LandingPage({projectList, supabase, setProjects, priorities, addProject
                   <ProjectCard userInfo={userInfo} priorities={priorities} itemTasks={projectPercent} handleDelete={handleDelete} key={index} id={item["id"]} title={item["project_name"]} priority={item["priority"]} description={item["project_description"]} />
                 )})}
             </div>
-                </>    
+                </>
         )
                  : (
                     <div className='text-center w-[10%] m-auto'>
