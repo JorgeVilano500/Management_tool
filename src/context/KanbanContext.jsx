@@ -56,8 +56,8 @@ export function KanbanContextProvider({children}) {
         setProjects()
         const {data, error} = await supabase.from('project_list').select('id, project_name, project_description, priority, project_task(task_id, task_status)')
         // 'id, project_name, project_description, time_created, project_task(task_id, project_id, task_status, task_desc, task_title)'
-        if(error) {console.log(error)}
-        // console.log(data)
+        if(error) {window.alert(error)}
+        // window.alert(data)
         setProjects(data.reverse())
     }
 
@@ -118,10 +118,10 @@ export function KanbanContextProvider({children}) {
                 email: '', 
                 password: ''
             })
-            return console.log('Login Error', error)
+            return window.alert('Login Error', error)
         }
             else if (data.user){
-                console.log(data);
+                window.alert(data);
                 setUserInfo(data);
                 setLoggedIn(true);
             }
@@ -134,20 +134,19 @@ export function KanbanContextProvider({children}) {
             email: loginInfo.email, 
             password: loginInfo.password
         })
-        if(error) return console.log(error.message)
+        if(error) return window.alert(error.message)
        
         
     }
 
-    const editProject = async (e, taskId, updatedTask) => {
-        e.preventDefault();
+    const editProject = async (taskId, updatedTask) => {
 
-        const {error, data} = await supabase.from('project_task').update({'task_desc': updatedTask}).eq('task_id', taskId)
+        const {error} = await supabase.from('project_task').update({'task_desc': updatedTask}).eq('task_id', taskId)
 
         if(error){
-            console.log("Error editing project" + error.message)
+            window.alert("Error editing project" + error.message)
         } else {
-            console.log('successful edit')
+            window.alert('successful edit')
         }
 
     }
@@ -155,7 +154,7 @@ export function KanbanContextProvider({children}) {
 
 
     return (
-        <KanbanContext.Provider value={{signOut, loggedIn, userInfo, loginInfo, createUserFetch, handleLoginChange, handleLoginFetch, projects, supabase, setProjects, priorities, displayName, addProjectSupabase, setNewProject, newProject}}>
+        <KanbanContext.Provider value={{signOut, loggedIn, userInfo, loginInfo, createUserFetch, handleLoginChange, handleLoginFetch, projects, supabase, setProjects, priorities, displayName, addProjectSupabase, setNewProject, newProject, editProject}}>
             {children}
         </KanbanContext.Provider>
     )

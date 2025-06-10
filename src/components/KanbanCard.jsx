@@ -14,7 +14,7 @@ import {TaskModal, ModalContentCard} from './index'
 //   )
 // }
 
-function KanbanCard({userInfo, text, handleDelete, loggedIn}) {
+function KanbanCard({userInfo, text, handleDelete, loggedIn, editProject}) {
   const ref = useRef()
 
   const [modal, setModal] = useState(false);
@@ -46,7 +46,7 @@ function KanbanCard({userInfo, text, handleDelete, loggedIn}) {
             {/* <button className="secondary-cta">Mark as read</button> */}
             {userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(text)} ><CiCircleRemove className='text-blue-500 transition ease-in-out hover:text-gray-200' /></button> : <></>}
               <TaskModal closeModal={() => setModal(false)} openModal={modal}>
-                <ModalContentCard loggedIn={loggedIn} text={text["task_desc"]} editModal={editModal} setEditModal={setEditModal} editText={editText} setEditText={setEditText}/>
+                <ModalContentCard editProject={editProject} taskId={text["task_id"]} loggedIn={loggedIn} text={text["task_desc"]} editModal={editModal} setEditModal={setEditModal} editText={editText} setEditText={setEditText}/>
               </TaskModal>
 
           </div>

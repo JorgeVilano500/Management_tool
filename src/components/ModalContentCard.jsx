@@ -1,4 +1,4 @@
- function ModalContentCard({text, setEditModal, editModal, editText, setEditText, loggedIn}) {
+ function ModalContentCard({text, setEditModal, editModal, editText, setEditText, loggedIn, editProject, taskId}) {
     return (
         // <!-- From Uiverse.io by gharsh11032000 --> 
 <div className="card">
@@ -14,12 +14,16 @@
     </svg>
     <p onDoubleClick={() => setEditModal(!editModal)} className="para">
         {editModal && loggedIn ? (
-          <form >
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            editProject( taskId, editText)
+            setEditModal(!editModal)
+          }} >
               <textarea rows={10} cols={30} className="text-gray-400" value={editText} onChange={(e) => {setEditText(e.currentTarget.value)}} />
             {/* <input /> */}
               <button className='bg-red-500 border border-transparent rounded sm:mt-2 sm:w-[50%] lg:w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  ' type='submit'  >Submit</button>
           </form>
-        ) : (<p>{text}</p>)}
+        ) : (<p>{editText ? editText : text}</p>)}
     </p>
   </div>
 </div>

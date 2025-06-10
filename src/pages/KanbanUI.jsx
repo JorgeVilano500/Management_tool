@@ -28,7 +28,7 @@ function KanbanUI() {
   }
   const [loading, setLoading] = useState(false)
   const {projectId} = useParams();
-  const {supabase, userInfo, loggedIn} = useKanbanContext();
+  const {supabase, userInfo, loggedIn, editProject} = useKanbanContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = (taskStatus) => {
@@ -231,7 +231,7 @@ function KanbanUI() {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <KanbanCard loggedIn={loggedIn} userInfo={userInfo} handleDelete={handleDelete} text={task} />
+                              <KanbanCard editProject={editProject} loggedIn={loggedIn} userInfo={userInfo} handleDelete={handleDelete} text={task} />
 
                             </div>
                           )}
