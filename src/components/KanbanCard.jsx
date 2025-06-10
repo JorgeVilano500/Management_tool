@@ -14,10 +14,13 @@ import {TaskModal, ModalContentCard} from './index'
 //   )
 // }
 
-function KanbanCard({userInfo, text, handleDelete}) {
+function KanbanCard({userInfo, text, handleDelete, loggedIn}) {
   const ref = useRef()
 
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
+  const [editText, setEditText] = useState(text['task_desc']);
 
   
 
@@ -39,11 +42,11 @@ function KanbanCard({userInfo, text, handleDelete}) {
             {/* <p className="time">{text["time_created"]}</p> */}
           </div>
           <div className="button-wrap">
-            <button onClick={() => setModal(true)} className="primary-cta">View file</button>
+            <button onClick={() => setModal(true)} className="primary-cta">View Task</button>
             {/* <button className="secondary-cta">Mark as read</button> */}
             {userInfo?.email === import.meta.env.VITE_PRIMARY_USER ? <button onClick={() => handleDelete(text)} ><CiCircleRemove className='text-blue-500 transition ease-in-out hover:text-gray-200' /></button> : <></>}
               <TaskModal closeModal={() => setModal(false)} openModal={modal}>
-                <ModalContentCard text={text["task_desc"]} />
+                <ModalContentCard loggedIn={loggedIn} text={text["task_desc"]} editModal={editModal} setEditModal={setEditModal} editText={editText} setEditText={setEditText}/>
               </TaskModal>
 
           </div>
@@ -56,4 +59,4 @@ function KanbanCard({userInfo, text, handleDelete}) {
   )
 }
 
-export default KanbanCard
+export default KanbanCard 

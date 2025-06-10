@@ -11,19 +11,7 @@ function LandingPage({projectList, supabase, setProjects, priorities, addProject
     const { userInfo} = useKanbanContext();
   
    
-    function formatDate() {
-        var d = new Date(),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-    
-        if (month.length < 2) 
-            month = '0' + month;
-        if (day.length < 2) 
-            day = '0' + day;
-        const newDate =  [year, month, day].join('-');
-        return newDate;
-    }
+   
     const handleTaskProgess = async (list) => {
         let completedPercent;
         let totalListVal = list.length; 

@@ -6,13 +6,11 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { GoSidebarCollapse } from "react-icons/go";
 import {Modal} from './index';
 
-function Navbar({userInfo, addProjectSupabase, signOut}) {
+function Navbar({userInfo, addProjectSupabase, signOut, setNewProject, newProject}) {
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [newProject, setNewProject] = useState({
-    projectName: '', 
-    projectDescription: '', 
-})
+  
+ 
 
   const toggleSidebar = () => {
     console.log('clicked', isSideOpen)
@@ -56,27 +54,29 @@ function Navbar({userInfo, addProjectSupabase, signOut}) {
                     <li className="py-2"><a className=' self-center border border-transparent  p-1  transition ease-in hover:text-slate-500 hover:bg-slate-200  rounded-[1rem]' target='_blank' href={'https://javawebsite.netlify.app/'}>Portfolio</a></li>
                     {userInfo? <li className="py-2">
             <Modal task={'Project'} toggleModal={toggleModal} isOpen={isOpen}  >
-                <div className='flex xs:flex-col lg:flex-col sm:h-[5rem] lg:h-[10rem] m-auto'>
-                            <input
+                <form onSubmit={(e) => {addProjectSupabase(e)}} className='flex xs:flex-col lg:flex-col sm:h-[5rem] lg:h-[10rem] m-auto'>
+                            {/* <input
                             type="hidden"
                             name="addToProjects"
                             value="projectForm"
-                            />
+                            /> */}
                         <div className='flex xs:flex-col lg:flex-row  xs:h-[80%] lg:h-[90%]'>
 
-                            <input className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Title' value={newProject.projectName} 
-                            onChange={(e) => {return setNewProject({
-                              // ...newProject,
-                              projectName: e.target.value
-                            })} } 
+                            <input name='name' className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Title' value={newProject?.projectName} 
+                                onChange={(e) => {return setNewProject({
+                                  ...newProject,
+                                  projectName: e.target.value
+                                })}} 
                             />
-                         <input className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Description' value={newProject.projectDescription} onChange={(e) => {return setNewProject({
-                           ...newProject,
-                           projectDescription: e.target.value
-                            }) }} />
+                         <input name='description' className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Description' value={newProject?.projectDescription} 
+                            onChange={(e) => {return setNewProject({
+                              ...newProject,
+                              projectDescription: e.target.value
+                                })}} 
+                            />
                             </div>
-                        <input className='bg-red-500 border border-transparent rounded sm:mt-2 sm:w-[50%] lg:w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  ' onClick={addProjectSupabase} type='submit' placeholder='Submit' />
-                    </div> 
+                        <input className='bg-red-500 border border-transparent rounded sm:mt-2 sm:w-[50%] lg:w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  '  type='submit' placeholder='Submit' />
+                    </form> 
                     </Modal> 
          
         </li>  : <></>}
@@ -101,27 +101,44 @@ function Navbar({userInfo, addProjectSupabase, signOut}) {
           <a className=' self-center border border-transparent  p-1  transition ease-in hover:text-slate-500 hover:bg-slate-200  rounded-[1rem]' target='_blank' href={'https://javawebsite.netlify.app/'}><MdOutlineWeb className='w-[2rem] h-[2rem]' /></a>
           {userInfo?
             <Modal task={'Project'} toggleModal={toggleModal} isOpen={isOpen}  >
-                <div className='flex xs:flex-col lg:flex-col sm:h-[5rem] lg:h-[10rem] m-auto'>
-                            <input
+                <form onSubmit={(e) => {addProjectSupabase(e); toggleModal()}} className='flex xs:flex-col lg:flex-col sm:h-[5rem] lg:h-[10rem] m-auto'>
+                            {/* <input
                             type="hidden"
                             name="addToProjects"
                             value="projectForm"
-                            />
-                        <div className='flex xs:flex-col lg:flex-row  xs:h-[80%] lg:h-[90%]'>
+                            /> */}
+                        <div className='flex flex-col  xs:h-[80%] lg:h-[90%]'>
 
-                            <input className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Title' value={newProject.projectName} 
-                            onChange={(e) => {return setNewProject({
-                                // ...newProject,
-                                projectName: e.target.value
+                            <input name='name' className='text-gray-800 xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Title' value={newProject?.projectName} 
+                            onChange={(e) => { setNewProject({
+                                ...newProject,
+                                projectName: e.currentTarget.value
                             })} } 
                             />
-                         <input className='xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Description' value={newProject.projectDescription} onChange={(e) => {return setNewProject({
+                         <input name='description' className='text-gray-800 xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400' type="text" placeholder='Project Description' value={newProject?.projectDescription} onChange={(e) => { setNewProject({
                              ...newProject,
-                             projectDescription: e.target.value
+                             projectDescription: e.currentTarget.value
                             }) }} />
+
+                          <select
+                            name='priority'
+                             className='text-gray-800 xs:my-2 xs:h-[100%] lg:h-[25%] m-auto border-[1px] rounded transition ease-in hover:border-red-400'
+                             type="text"
+                             placeholder='Project Priority'
+                             value={newProject?.priority}
+                            onChange={(e) => { setNewProject({
+                              ...newProject,
+                              priority: e.currentTarget.value
+                             }) }} 
+                          >
+                            <option value='low'>low</option>
+                            <option value='medium'>medium</option>
+                            <option value='high'>high</option>
+                          </select> 
+
                             </div>
-                        <input className='bg-red-500 border border-transparent rounded sm:mt-2 sm:w-[50%] lg:w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  ' onClick={addProjectSupabase} type='submit' placeholder='Submit' />
-                    </div> 
+                        <button className='bg-red-500 border border-transparent rounded sm:mt-2 sm:w-[50%] lg:w-[25%] m-auto py-1 text-white transition ease-in hover:bg-red-900 hover:border-black hover:border-[1px]  ' type='submit'  >Submit</button>
+                    </form> 
                     </Modal> 
           : <></>
         }

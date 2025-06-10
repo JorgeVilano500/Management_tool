@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {useLocalStorage} from '../hooks/useLocalStorage';
+// import {useLocalStorage} from '../hooks/useLocalStorage';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseURL = import.meta.env.VITE_SUPABASE_URL; 
@@ -19,6 +19,7 @@ export function KanbanContextProvider({children}) {
     const [newProject, setNewProject] = useState({
         projectName: '', 
         projectDescription: '', 
+        priority: 'low'
     })
 
     // this is when people are loggin in or registering 
@@ -37,6 +38,19 @@ export function KanbanContextProvider({children}) {
         'high': '#F53B0C'
     }
 
+    function formatDate() {
+        var d = new Date(),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+    
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+        const newDate =  [year, month, day].join('-');
+        return newDate;
+    }
 
     const fetchProjectDetails = async () => {
         setProjects()
@@ -69,12 +83,19 @@ export function KanbanContextProvider({children}) {
         fetchUserDetails();
     }, [])
 
-    const addProjectSupabase = async () => {
-        const {data, error} = await supabase.from('project_list').insert({id: projects.length + 1 ,'project_name': newProject.projectName, 'project_description': newProject.projectDescription, 'time_created': formatDate()}).select();
+    const addProjectSupabase = async (event) => {
+        event.preventDefault();
 
-        if(data) toggleModal();
-        return setProjects([...projects, data[0]]);
+        const {data, error} = await supabase.from('project_list').insert([{id: projects.length + 2 ,'project_name': newProject.projectName, 'project_description': newProject.projectDescription, 'time_created': formatDate(), 'priority': newProject.priority}]).select();
+        if(error) {
+            window.alert('Error' + error.message)
+        }
+        if(data){
+             window.alert('Successful')
+             return setProjects([...projects, data[0]]);
+            }
     }
+    
 
   
 
@@ -118,10 +139,23 @@ export function KanbanContextProvider({children}) {
         
     }
 
+    const editProject = async (e, taskId, updatedTask) => {
+        e.preventDefault();
+
+        const {error, data} = await supabase.from('project_task').update({'task_desc': updatedTask}).eq('task_id', taskId)
+
+        if(error){
+            console.log("Error editing project" + error.message)
+        } else {
+            console.log('successful edit')
+        }
+
+    }
+
 
 
     return (
-        <KanbanContext.Provider value={{signOut, loggedIn, userInfo, loginInfo, createUserFetch, handleLoginChange, handleLoginFetch, projects, supabase, setProjects, priorities, displayName, addProjectSupabase}}>
+        <KanbanContext.Provider value={{signOut, loggedIn, userInfo, loginInfo, createUserFetch, handleLoginChange, handleLoginFetch, projects, supabase, setProjects, priorities, displayName, addProjectSupabase, setNewProject, newProject}}>
             {children}
         </KanbanContext.Provider>
     )
